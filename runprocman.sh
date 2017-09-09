@@ -13,4 +13,4 @@ export SPARTAN_INSTALL_DIR=/home/robot-lab/spartan-sammy/build/install
 
 cd $DRAKE_DIR
 
-$SPARTAN_INSTALL_DIR/bin/bot-procman-sheriff -l $MY_DIR/iiwa_hardware.pmd
+$SPARTAN_INSTALL_DIR/bin/bot-procman-sheriff -l $MY_DIR/dual_iiwa_hardware.pmd
