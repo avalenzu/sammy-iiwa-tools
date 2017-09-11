@@ -65,7 +65,7 @@ group "4.pick-and-place" {
 
 group "5.iiwa-sim" {
     cmd "0.kuka-sim" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_simulator";
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_simulator --start_position_2 4";
         host = "localhost";
     }
 }
@@ -82,4 +82,30 @@ cmd "7.lcm-spy" {
 cmd "8.signal-scope" {
     exec = "signal-scope $SPARTAN_SOURCE_DIR/config/iiwa/kuka_iiwa_signal_scope.py";
     host = "localhost";
+}
+
+script "start-all-drivers" {
+    run_script "start-vision-drivers";
+    run_script "start-drivers-left";
+    run_script "start-drivers-right";
+}
+
+script "start-drivers-left" {
+    stop cmd "1.iiwa_controller-left" wait "stopped";
+    start cmd "1.kuka-driver-left";
+    start cmd "1.iiwa_controller-left";
+    start cmd "1.state-translator-left";
+    start cmd "1.schunk-driver-left";
+}
+
+script "start-drivers-right" {
+    stop cmd "0.iiwa_controller-right" wait "stopped";
+    start cmd "0.kuka-driver-right";
+    start cmd "0.iiwa_controller-right";
+    start cmd "0.state-translator-right";
+    start cmd "0.schunk-driver-right";
+}
+
+script "start-vision-drivers" {
+    start group "1.vision-drivers";
 }
