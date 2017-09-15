@@ -50,12 +50,12 @@ group "2.4.state-translators" {
 }
 
 group "4.pick-and-place" {
-    cmd "0.pick-and-place-right" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 0 --target 1 --spdlog_level debug --collision_avoidance_threshold 0.05";
+    cmd "1.pick-and-place-left" {
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 1 --target 2 --spdlog_level debug --collision_avoidance_threshold 0.20";
         host = "localhost";
     }
-    cmd "1.pick-and-place-left" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 1 --target 2 --spdlog_level debug --collision_avoidance_threshold 0.05";
+    cmd "0.pick-and-place-right" {
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 0 --target 1 --spdlog_level debug --collision_avoidance_threshold 0.20 --ignore_tall_tables true";
         host = "localhost";
     }
 }
@@ -70,6 +70,10 @@ group "3.schunk-driver" {
         host = "localhost";
     }
 }
+cmd "7.lcm-spy" {
+    exec = "$DRAKE_BIN_DIR/drake/lcmtypes/drake-lcm-spy";
+    host = "localhost";
+}
 cmd "8.signal-scope" {
     exec = "signal-scope $SPARTAN_SOURCE_DIR/config/iiwa/kuka_iiwa_signal_scope.py";
     host = "localhost";
@@ -78,9 +82,19 @@ cmd "6.drake-visualizer" {
     exec = "env -i $DRAKE_BIN_DIR/tools/drake_visualizer";
     host = "localhost";
 }
-cmd "7.lcm-spy" {
-    exec = "$DRAKE_BIN_DIR/drake/lcmtypes/drake-lcm-spy";
-    host = "localhost";
+
+script "simulate-both" {
+    start group "5.iiwa-sim";
+    start cmd "0.iiwa_controller-right";
+    start cmd "1.iiwa_controller-left";
+    start cmd "0.pick-and-place-right";
+    start cmd "1.pick-and-place-left";
+}
+
+script "simulate-right" {
+    start group "5.iiwa-sim";
+    start cmd "0.iiwa_controller-right";
+    start cmd "0.pick-and-place-right";
 }
 
 script "start-all-drivers" {
