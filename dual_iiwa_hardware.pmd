@@ -1,28 +1,28 @@
 group "2.1.iiwa-drivers" {
-    cmd "1.kuka-driver-left" {
-        exec = "kuka_driver --fri_port 30201 --lcm_command_channel \"IIWA_COMMAND_1\" --lcm_status_channel \"IIWA_STATUS_1\"";
-        host = "localhost";
-    }
     cmd "0.kuka-driver-right" {
         exec = "kuka_driver --fri_port 30200 --lcm_command_channel \"IIWA_COMMAND_0\" --lcm_status_channel \"IIWA_STATUS_0\"";
+        host = "localhost";
+    }
+    cmd "1.kuka-driver-left" {
+        exec = "kuka_driver --fri_port 30201 --lcm_command_channel \"IIWA_COMMAND_1\" --lcm_status_channel \"IIWA_STATUS_1\"";
         host = "localhost";
     }
 }
 
 group "2.3.iiwa-controllers" {
     cmd "0.iiwa_controller-right" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/iiwa_controller --suffix \"_0\"";
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/iiwa_controller --lcm_command_channel \"IIWA_COMMAND_0\" --lcm_status_channel \"IIWA_STATUS_0\" --lcm_plan_channel \"COMMITTED_ROBOT_PLAN_0\"";
         host = "localhost";
     }
     cmd "1.iiwa_controller-left" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/iiwa_controller --suffix \"_1\"";
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/iiwa_controller --lcm_command_channel \"IIWA_COMMAND_1\" --lcm_status_channel \"IIWA_STATUS_1\" --lcm_plan_channel \"COMMITTED_ROBOT_PLAN_1\"";
         host = "localhost";
     }
 }
 
 group "5.iiwa-sim" {
     cmd "0.kuka-sim" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_simulator --start_position_2 4";
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_simulator";
         host = "localhost";
     }
 }
@@ -39,23 +39,23 @@ group "1.vision-drivers" {
 }
 
 group "2.4.state-translators" {
-    cmd "0.state-translator-right" {
-        exec = "directorPython $DRAKE_DIR/drake/examples/kuka_iiwa_arm/kuka_iiwa_state_translator_0.py --director_config $DRAKE_DIR/drake/examples/kuka_iiwa_arm/director_config.json";
-        host = "localhost";
-    }
     cmd "1.state-translator-left" {
         exec = "directorPython $DRAKE_DIR/drake/examples/kuka_iiwa_arm/kuka_iiwa_state_translator_1.py --director_config $DRAKE_DIR/drake/examples/kuka_iiwa_arm/director_config.json";
+        host = "localhost";
+    }
+    cmd "0.state-translator-right" {
+        exec = "directorPython $DRAKE_DIR/drake/examples/kuka_iiwa_arm/kuka_iiwa_state_translator_0.py --director_config $DRAKE_DIR/drake/examples/kuka_iiwa_arm/director_config.json";
         host = "localhost";
     }
 }
 
 group "4.pick-and-place" {
-    cmd "1.pick-and-place-left" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 1 --target 2 --spdlog_level debug --collision_avoidance_threshold 0.20";
+    cmd "0.pick-and-place-right" {
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 0 --target 0 --spdlog_level debug";
         host = "localhost";
     }
-    cmd "0.pick-and-place-right" {
-        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 0 --target 1 --spdlog_level debug --collision_avoidance_threshold 0.20 --ignore_tall_tables true";
+    cmd "1.pick-and-place-left" {
+        exec = "$DRAKE_BIN_DIR/drake/examples/kuka_iiwa_arm/dev/monolithic_pick_and_place/lcm_pick_and_place_demo --iiwa_index 1 --target 1 --spdlog_level debug";
         host = "localhost";
     }
 }
